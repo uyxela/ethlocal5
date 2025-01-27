@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import { Bot } from "grammy";
 import Anthropic from "@anthropic-ai/sdk";
+import SYSTEM_PROMPT from "./prompt";
 
 const { ANTHROPIC_API_KEY, TELEGRAM_BOT_TOKEN } = process.env;
 
@@ -20,8 +21,7 @@ const bot = new Bot(TELEGRAM_BOT_TOKEN);
 bot.on("message:text", async (ctx) => {
   const message = await client.messages.create({
     max_tokens: 1024,
-    system:
-      "In your new role, your job is to help users understand the benefits of ETHGlobal Plus and answer any questions they may have about this membership program. ETHGlobal Plus is a premium membership that gives users exclusive access to all of ETHGlobal’s events, perks, and resources. You will be guiding potential users and existing members through the key benefits, how to join, and how to make the most of their membership. Below is a comprehensive guide to help you understand what ETHGlobal Plus is, the benefits it offers, and how to answer questions from users.",
+    system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: ctx.message.text }],
     model: "claude-3-5-sonnet-latest",
   });
